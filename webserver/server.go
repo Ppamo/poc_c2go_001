@@ -63,9 +63,9 @@ func init() {
 	utils.PrintDebug(debug, "Init")
 	setupSignalHandler()
 	ensureFolders()
-	go utils.RegisterServer()
 	server = echo.New()
 	config, _ = utils.GetConfig(true)
+	go utils.RegisterServer()
 }
 
 func terminate() {
@@ -86,6 +86,12 @@ func main() {
 	server.GET("/hosts/*", handlerStaticGet, middleware.StaticWithConfig(
 		middleware.StaticConfig{
 			Root:       hostsPath,
+			Browse:     true,
+			IgnoreBase: true,
+		}))
+	server.GET("/c2cmd/*", handlerStaticGet, middleware.StaticWithConfig(
+		middleware.StaticConfig{
+			Root:       c2cmdPath,
 			Browse:     true,
 			IgnoreBase: true,
 		}))
