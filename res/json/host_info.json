@@ -1,0 +1,15 @@
+{
+	"hostname": "DESKTOP-4LG4SGB",
+	"uptime": 2622,
+	"bootTime": 1652981182,
+	"procs": 130,
+	"os": "windows",
+	"platform": "Microsoft Windows 10 Enterprise Evaluation",
+	"platformFamily": "Standalone Workstation",
+	"platformVersion": "10.0.19044 Build 19044",
+	"kernelVersion": "10.0.19044 Build 19044",
+	"kernelArch": "x86_64",
+	"virtualizationSystem": "",
+	"virtualizationRole": "",
+	"hostId": "8f4fda03-3322-43b7-b311-573c2f502899"
+}

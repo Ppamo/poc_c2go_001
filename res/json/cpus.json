@@ -1,0 +1,19 @@
+{
+	"cpu": [
+		{
+			"cpu": 0,
+			"vendorId": "GenuineIntel",
+			"family": "2",
+			"model": "",
+			"stepping": 0,
+			"physicalId": "",
+			"coreId": "",
+			"cores": 2,
+			"modelName": "Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz",
+			"mhz": 2592,
+			"cacheSize": 0,
+			"flags": [],
+			"microcode": ""
+		}
+	]
+}

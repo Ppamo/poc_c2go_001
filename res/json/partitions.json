@@ -1,0 +1,21 @@
+{
+	"diskPartitions": [
+		{
+			"device": "C:",
+			"mountpoint": "C:",
+			"fstype": "NTFS",
+			"opts": [
+				"rw",
+				"compress"
+			]
+		},
+		{
+			"device": "D:",
+			"mountpoint": "D:",
+			"fstype": "CDFS",
+			"opts": [
+				"ro"
+			]
+		}
+	]
+}
