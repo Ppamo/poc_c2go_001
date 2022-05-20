@@ -1,0 +1,28 @@
+{
+	"partitionsUsage": [
+		{
+			"path": "C:",
+			"fstype": "",
+			"total": 53097074688,
+			"free": 25311596544,
+			"used": 27785478144,
+			"usedPercent": 52.329583705445738,
+			"inodesTotal": 0,
+			"inodesUsed": 0,
+			"inodesFree": 0,
+			"inodesUsedPercent": 0
+		},
+		{
+			"path": "D:",
+			"fstype": "",
+			"total": 77355008,
+			"free": 0,
+			"used": 77355008,
+			"usedPercent": 100,
+			"inodesTotal": 0,
+			"inodesUsed": 0,
+			"inodesFree": 0,
+			"inodesUsedPercent": 0
+		}
+	]
+}

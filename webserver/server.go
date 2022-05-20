@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"libs"
@@ -19,9 +20,9 @@ var (
 
 const (
 	debug      bool   = true
-	staticPath string = "/home/develop/golang/src/ppamo.cl/c2go/webroot/static"
-	hostsPath  string = "/home/develop/golang/src/ppamo.cl/c2go/webroot/hosts"
-	c2cmdPath  string = "/home/develop/golang/src/ppamo.cl/c2go/webroot/c2cmd"
+	staticPath string = "wr/static"
+	hostsPath  string = "wr/hosts"
+	c2cmdPath  string = "wr/c2cmd"
 )
 
 func setupSignalHandler() {
@@ -38,12 +39,33 @@ func setupSignalHandler() {
 	}()
 }
 
+func ensureFolders() {
+	utils.PrintDebug(debug, "Ensuring folders creations")
+	folders := []string{staticPath, hostsPath, c2cmdPath}
+	for _, folder := range folders {
+		utils.PrintDebug(debug, "- %s", folder)
+		if fileInfo, err := os.Stat(folder); err != nil {
+			if errors.Is(err, os.ErrNotExist) {
+				err = os.MkdirAll(folder, 0755)
+				if err != nil {
+					utils.PrintDebug(debug, "Error creating folder %s", folder)
+					panic(err)
+				}
+			}
+		} else if !fileInfo.IsDir() {
+			utils.PrintDebug(debug, "Error file %s is not a folder", folder)
+			panic("Error file is not a folder")
+		}
+	}
+}
+
 func init() {
 	utils.PrintDebug(debug, "Init")
 	setupSignalHandler()
-	go utils.RegisterServer()
+	ensureFolders()
 	server = echo.New()
 	config, _ = utils.GetConfig(true)
+	go utils.RegisterServer()
 }
 
 func terminate() {
@@ -64,6 +86,12 @@ func main() {
 	server.GET("/hosts/*", handlerStaticGet, middleware.StaticWithConfig(
 		middleware.StaticConfig{
 			Root:       hostsPath,
+			Browse:     true,
+			IgnoreBase: true,
+		}))
+	server.GET("/c2cmd/*", handlerStaticGet, middleware.StaticWithConfig(
+		middleware.StaticConfig{
+			Root:       c2cmdPath,
 			Browse:     true,
 			IgnoreBase: true,
 		}))

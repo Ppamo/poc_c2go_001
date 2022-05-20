@@ -1,0 +1,30 @@
+{
+	"interfaces": [
+		{
+			"name": "Ethernet",
+			"bytesSent": 413065,
+			"bytesRecv": 3007331,
+			"packetsSent": 1740,
+			"packetsRecv": 2715,
+			"errin": 0,
+			"errout": 0,
+			"dropin": 0,
+			"dropout": 0,
+			"fifoin": 0,
+			"fifoout": 0
+		},
+		{
+			"name": "Loopback Pseudo-Interface 1",
+			"bytesSent": 0,
+			"bytesRecv": 0,
+			"packetsSent": 0,
+			"packetsRecv": 0,
+			"errin": 0,
+			"errout": 0,
+			"dropin": 0,
+			"dropout": 0,
+			"fifoin": 0,
+			"fifoout": 0
+		}
+	]
+}

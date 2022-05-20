@@ -5,7 +5,7 @@ CONFIG='server.json'
 printf "=> Encoding config with base64\n"
 ENCODED=$(cat $CONFIG | base64)
 ENCODED=${ENCODED//$'\n'/}
-ENCODED=${ENCODED:: -2}
+# ENCODED=${ENCODED:: -2}
 printf "> LEN: %d\nTEXT: %s\n" "${#ENCODED}" "$ENCODED"
 echo
 
